@@ -1,0 +1,12 @@
+{
+  "name": "playwright-token-generator",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node src/generateTokens.js"
+  },
+  "dependencies": {
+    "@azure/msal-node": "^2.6.0",
+    "dotenv": "^16.3.1"
+  }
+}
