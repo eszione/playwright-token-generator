@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "node src/generateTokens.js"
+    "start": "node src/generateTokens.js",
+    "auth": "node src/generateAuthState.js",
+    "ensure-auth": "node src/ensureAuth.js"
   },
   "dependencies": {
     "@azure/msal-node": "^2.6.0",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "playwright": "^1.55.0"
   }
 }
