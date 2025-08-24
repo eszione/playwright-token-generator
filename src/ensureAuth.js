@@ -109,7 +109,18 @@ async function ensureValidAuth(options = {}) {
   // Quick file-based check first
   if (!isAuthStateValid()) {
     console.log('🔄 Generating new auth state...');
-    execSync('node src/generateAuthState.js', { stdio: 'inherit' });
+    try {
+      execSync('node src/generateAuthState.js', { stdio: 'inherit' });
+      console.log('✅ Auth state regeneration completed');
+      
+      // Verify the new auth state was created
+      if (fs.existsSync('auth-state.json')) {
+        const newAuthState = JSON.parse(fs.readFileSync('auth-state.json', 'utf8'));
+        console.log(`🍪 New auth state has ${newAuthState.cookies?.length || 0} cookies`);
+      }
+    } catch (error) {
+      console.error('❌ Auth state regeneration failed:', error.message);
+    }
     return;
   }
 

@@ -11,16 +11,34 @@ async function generateAuthState() {
 
   try {
     // Navigate to your portal login page
+    console.log('🔐 Navigating to portal...');
     await page.goto('https://motek.dev.thlonline.com/');
-    console.log('🔐 Starting from portal login page...');
+    console.log('✅ Page loaded, waiting for content...');
     
-    // Click the login button (only button on the page)
+    // Short wait for dynamic content to load
+    await page.waitForTimeout(2000);
+    
+    // Debug: Check what buttons are actually on the page
+    const buttons = await page.evaluate(() => {
+      const allButtons = Array.from(document.querySelectorAll('button'));
+      return allButtons.map(btn => ({
+        text: btn.textContent?.trim(),
+        testId: btn.getAttribute('data-testid'),
+        classes: btn.className,
+        outerHTML: btn.outerHTML.substring(0, 200)
+      }));
+    });
+    console.log('🔍 Found buttons:', JSON.stringify(buttons, null, 2));
+    
+    // Wait for and click the specific Entra login button
     try {
-      await page.waitForSelector('button', { timeout: 10000 });
-      await page.click('button');
-      console.log('✅ Clicked login button');
+      await page.waitForSelector('[data-testid="entra-login-button"]', { timeout: 10000 });
+      await page.click('[data-testid="entra-login-button"]');
+      console.log('✅ Clicked Entra login button');
     } catch (error) {
-      console.log('⚠️ Login button not found, page might redirect automatically');
+      console.log('❌ Entra login button not found');
+      console.log('❌ Available buttons:', buttons.length);
+      throw new Error('Required login button with data-testid="entra-login-button" not found');
     }
     
     console.log('🔐 Automating login process...');
